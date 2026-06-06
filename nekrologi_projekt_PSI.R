@@ -79,10 +79,36 @@ corpus[[1]][[1]]
 corpus <- tm_map(corpus, removeWords, c(
   "roku", "dniu", "dnia", "pan", "pani", "prof", "dr", "mgr",
   "nasz", "nasze", "naszej", "naszego", "sie", "sobie",
-  "jako", "przy", "swoim", "swoje", "swoja", "wszystkich"
+  "jako", "przy", "swoim", "swoje", "swoja", "wszystkich", "się", "godzinie",
+  "lat", "czym", "wyrazy", "nastąpi", "współczucia", "cię",
+  "głębokim", "oraz"
 ))
 
 corpus <- tm_map(corpus, stripWhitespace)
 
 # Sprawdzenie
 corpus[[1]][[1]]
+
+# Macierz częstości TDM ----
+
+tdm <- TermDocumentMatrix(corpus)
+tdm_m <- as.matrix(tdm)
+
+
+# 2. Zliczanie częstości słów ----
+# (Word Frequency Count)
+
+
+# Zlicz częstości słów
+v <- sort(rowSums(tdm_m), decreasing = TRUE)
+tdm_df <- data.frame(word = names(v), freq = v)
+head(tdm_df, 10)
+
+
+# 3. Analiza danych
+wordcloud(words = tdm_df$word, freq = tdm_df$freq, min.freq = 30,
+          colors = brewer.pal(8, "Dark2"))
+
+
+# Wyświetl top 10
+print(head(tdm_df, 10))
